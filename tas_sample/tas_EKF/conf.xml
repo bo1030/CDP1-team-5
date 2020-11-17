@@ -8,7 +8,7 @@
         <parentport>3105</parentport>
     </tas>
     <upload>
-        <ctname>position</ctname>
+        <ctname>EKF</ctname>
         <id>data</id>
     </upload>
 </m2m:conf>

@@ -155,9 +155,9 @@ setInterval(() => {
 
         var con = {
             time: ct,
-            x: type2,
-            y: type2,
-            z: type2
+            Pitch: type2,
+            Roll: type2,
+            Yaw: type2
         };
 
         for (var i = 0; i < upload_arr.length; i++) {
