@@ -1,0 +1,14 @@
+﻿<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<m2m:conf xmlns:m2m="http://www.onem2m.org/xml/protocols" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+    <tas>
+        <!-- <comport>/COM1</comport>
+        <baudrate>9600</baudrate> -->
+        <!--<parenthostname>192.168.49.9</parenthostname>-->
+        <parenthostname>localhost</parenthostname>
+        <parentport>3105</parentport>
+    </tas>
+    <upload>
+        <ctname>battery</ctname>
+        <id>data</id>
+    </upload>
+</m2m:conf>

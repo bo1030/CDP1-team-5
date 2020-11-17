@@ -29,17 +29,17 @@ conf.sim = 'disable'; // enable / disable
 cse.host        = '13.209.165.214'; //'59.10.2.16';
 cse.port        = '7579';
 cse.name        = 'Mobius';
-cse.id          = '/Mobius2';
+cse.id          = '/Mobius';
 cse.mqttport    = '1883';
 cse.wsport      = '7577';
 
 // build ae
-ae.name         = 'IYAHN_DEMO';
+ae.name         = 'CDP5';
 
 ae.id           = 'S'+ae.name;
 
 ae.parent       = '/' + cse.name;
-ae.appid        = 'measure_co2';
+ae.appid        = 'drone_data';
 ae.port         = '9727';
 ae.bodytype     = 'json'; // select 'json' or 'xml' or 'cbor'
 ae.tasport      = '3105';
@@ -51,7 +51,10 @@ cnt_arr[count].parent = '/' + cse.name + '/' + ae.name;
 cnt_arr[count++].name = 'tvoc';
 cnt_arr[count] = {};
 cnt_arr[count].parent = '/' + cse.name + '/' + ae.name;
-cnt_arr[count++].name = 'co2';
+cnt_arr[count++].name = 'battery';
+cnt_arr[count] = {};
+cnt_arr[count].parent = '/' + cse.name + '/' + ae.name;
+cnt_arr[count++].name = 'position';
 cnt_arr[count] = {};
 cnt_arr[count].parent = '/' + cse.name + '/' + ae.name;
 cnt_arr[count++].name = 'temp';
