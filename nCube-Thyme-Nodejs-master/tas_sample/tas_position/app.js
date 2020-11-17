@@ -154,8 +154,7 @@ setInterval(() => {
         var type4 = padLeft(Math.floor(Math.random() * 1000) + 1,11);       //=> (4)
 
         var con = {
-            dat00: ct,
-			
+            time: ct,
             x: type2,
             y: type2,
             z: type2

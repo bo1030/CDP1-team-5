@@ -151,23 +151,13 @@ setInterval(() => {
             return RandVal;
         }
 
-        // var a = makeRandom(1, 1000);
-
         function padLeft(nr, n, str){
             return Array(n-String(nr).length+1).join(str||'0')+nr;
         }
 
-//or as a Number prototype method:
-
         Number.prototype.padLeft = function(n,str){
             return Array(n-String(this).length+1).join(str||'0')+this;
         }
-
-//examples
-        console.log(padLeft(Math.floor(Math.random() * 1000) + 1,14));       //=> (1) '14자리 :0 +랜덤값'
-        console.log(padLeft(Math.floor(Math.random() * 1000) + 1,10) + '.' + padLeft(makeRandom(0, 9999), 4));       //=> (2) '10자리 :0 , 소수 4자리 +랜덤값'
-        console.log(padLeft(Math.floor(Math.random() * 1000) + 1,10));       //=> (3) '10자리 :0 +랜덤값'
-        console.log(padLeft(Math.floor(Math.random() * 1000) + 1,11));       //=> (4) '11자리 :0 +랜덤값'
 
         //console.log((Math.floor(Math.random() * 1000) + 1).padLeft(5));     //=> '00023'
         //console.log((a).padLeft(5,' ')); //=> '   23'
@@ -185,9 +175,8 @@ setInterval(() => {
         var type4 = padLeft(Math.floor(Math.random() * 1000) + 1,11);       //=> (4)
 
         var con = {
-            dat00: ct,
-
-            dat01: type2,
+            time: ct,
+            battery: type2,
         };
 
         for (var i = 0; i < upload_arr.length; i++) {
@@ -200,52 +189,6 @@ setInterval(() => {
         }
     }
 }, 1000);
-
-/////////// base64 decode
-/*        var imagesample = path.basename('/Users/jiholee/Downloads/hi.jpeg');
-        var fs = require('fs');
-// 파일시스템 모듈을 이용하여 이미지를 읽은후 base64로 인코딩하기
-        function base64_encode(imagesmaple) {
-            // 바이너리 데이터 읽기 file 에는 파일의 경로를 지정
-            var bitmap = fs.readFileSync(imagesample);
-            //바이너리 데이터를 base64 포멧으로 인코딩하여 스트링 획득
-            return new Buffer(bitmap).toString('base64');
-            console.log('** base64: ' + bitmap);
-        }
-
-// base64포멧의 스트링을 디코딩하여 파일로 쓰는 함수
-        function base64_decode(base64str, file) {
-            // 버퍼 객체를 만든후 첫번째 인자로 base64 스트링, 두번째 인자는 파일 경로를 지정 파일이름만 있으면 프로젝트 root에 생성
-            var bitmap = new Buffer(base64str, 'base64');
-            // 버퍼의 파일을 쓰기
-            fs.writeFileSync(file, bitmap);
-            console.log('******** base64로 인코딩되었던 파일 쓰기 성공 ********');
-        }
-
-// 파일을 base 64로 인코딩 하기
-        var base64str = base64_encode('kitten.jpg');
-        console.log(base64str);
-// base64 포멧 스트링을 파일로 쓰기
-        base64_decode(base64str, 'copy.jpg');*/
-
-
-//////////decode
-
-
-
-//upload하는 부분 - 후에 dataset 추가하는 IPE 만들 때 활용
-// function serial_upload_action() {
-//     if (tas_state == 'upload') {
-//         var buf = new Buffer(4);
-//         buf[0] = 0x11;
-//         buf[1] = 0x01;
-//         buf[2] = 0x01;
-//         buf[3] = 0xED;
-//         myPort.write(buf);
-//     }
-// }
-
-// var tas_download_count = 0;
 
 function on_receive(data) {
     if (tas_state == 'connect' || tas_state == 'reconnect' || tas_state == 'upload') {
@@ -359,91 +302,3 @@ function tas_watchdog() {
 //sec 단위는 ms
 wdt.set_wdt(require('shortid').generate(), 3, tas_watchdog);
 // wdt.set_wdt(require('shortid').generate(), 3, serial_upload_action);
-
-// var cur_c = '';
-// var pre_c = '';
-// var g_sink_buf = '';
-// var g_sink_ready = [];
-// var g_sink_buf_start = 0;
-// var g_sink_buf_index = 0;
-// var g_down_buf = '';
-
-// function showPortOpen() {
-//     console.log('port open. Data rate: ' + myPort.options.baudRate);
-// }
-
-// var count = 0;
-// function saveLastestData(data) {
-//     var val = data.readUInt16LE(0, true);
-
-//     if(g_sink_buf_start == 0) {
-//         if(val == 0x16) {
-//             count = 1;
-//             g_sink_buf_start = 1;
-//             g_sink_ready.push(val);
-//         }
-//     }
-//     else if(g_sink_buf_start == 1) {
-//         if(val == 0x05) {
-//             count = 2;
-//             g_sink_buf_start = 2;
-//             g_sink_ready.push(val);
-//         }
-//     }
-//     else if(g_sink_buf_start == 2) {
-//         if(val == 0x01) {
-//             count = 3;
-//             g_sink_buf_start = 3;
-//             g_sink_ready.push(val);
-//         }
-//     }
-//     else if(g_sink_buf_start == 3) {
-//         count++;
-//         g_sink_ready.push(val);
-
-//         if(count >= 9){
-//             console.log(g_sink_ready);
-
-//             /*CO2 통신 예제
-//             SEND(4바이트) : 0x11, 0x01, 0x01, 0xED
-//             Respond(8바이트) : 0x16, 0x05, 0x01, 0x02, 0x72, 0x01, 0xD6, 0x99
-//             응답의 0x16, 0x05, 0x01 은 항상 같은 값을 가지며, 빨간색 글씨의 0x02, 0x72 가 농도를 나타내는 수치입니다.
-//             (HEX) 0x0272 = 626
-//             즉, 농도는 626 ppm 입니다. */
-
-//             var nValue = g_sink_ready[3] * 256 + g_sink_ready[4];
-
-//             console.log(nValue);
-
-//             if(tas_state == 'upload') {
-//                 for(var i = 0; i < upload_arr.length; i++) {
-//                     if(upload_arr[i].ctname == 'cnt-co2') {
-//                         var cin = {ctname: upload_arr[i].ctname, con: nValue.toString()};
-//                         console.log('SEND : ' + JSON.stringify(cin) + ' ---->');
-//                         upload_client.write(JSON.stringify(cin) + '<EOF>');
-//                         break;
-//                     }
-//                 }
-//             }
-
-//             g_sink_ready = [];
-//             count = 0;
-//             g_sink_buf_start = 0;
-//         }
-//     }
-// }
-
-// function showPortClose() {
-//     console.log('port closed.');
-// }
-
-// function showError(error) {
-//     var error_str = util.format("%s", error);
-//     console.log(error.message);
-//     if (error_str.substring(0, 14) == "Error: Opening") {
-
-//     }
-//     else {
-//         console.log('SerialPort port error : ' + error);
-//     }
-// }
