@@ -169,7 +169,7 @@ setInterval(() => {
             }
         }
     }
-}, 100);
+}, 500);
 
 function on_receive(data) {
     if (tas_state == 'connect' || tas_state == 'reconnect' || tas_state == 'upload') {
