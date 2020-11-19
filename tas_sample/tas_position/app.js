@@ -54,11 +54,10 @@ var tas_state = 'init';
 var upload_client = null;
 
 var tas_download_count = 0;
-
+var fmt1 = 'YYYYMMDDHHmmss';
 setInterval(() => {
     if (tas_state == 'upload') {
         var now = new Date();
-        var fmt1 = 'YYYYMMDDHHmmss';
         var ct = moment(now).format(fmt1);
         console.log('**TIME: ' + ct);
         var rnd = Math.random() * 100;
