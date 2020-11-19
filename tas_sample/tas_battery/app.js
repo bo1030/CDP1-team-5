@@ -2,20 +2,14 @@ var net = require('net');
 var util = require('util');
 var fs = require('fs');
 var xml2js = require('xml2js');
-
 var wdt = require('./wdt');
-
-const path = require('path');
-
 const moment = require('moment');
 require('moment-timezone');
 moment.tz.setDefault("Asia/Seoul");
 var useparentport = '';
 var useparenthostname = '';
-
 var upload_arr = [];
 var download_arr = [];
-
 var conf = {};
 
 // This is an async file read
@@ -57,64 +51,20 @@ fs.readFile('conf.xml', 'utf-8', function (err, data) {
 
 
 var tas_state = 'init';
-
 var upload_client = null;
-
-var t_count = 0;
+var tas_download_count = 0;
 
 setInterval(() => {
     if (tas_state == 'upload') {
         var now = new Date();
-        var second = 1000 * 60;
         var fmt1 = 'YYYYMMDDHHmmss';
-        var ct = moment(now).format(fmt1); //Date 객체를 파라미터로 넣기
+        var ct = moment(now).format(fmt1);
         console.log('**TIME: ' + ct);
-        var hi = (Math.random() * 10) + 1;
-        console.log('hi == :' + hi);
-
-
-        var a = '12345';
-        var b = 12345;
-        var util = require('util');
-        var data = util.format('%010d, %s', b, a);
-
-        console.log('****** result : ' +  data);
-
-
-        console.log('test----------------------------');
-
-        //종류:
-        // (1) %014d : 정수 14자리, 앞을 0으로
-        // (2) %010.4f : 정수 10자리, 앞을 0으로 + 소수4자리
-        // (3) %010d : 정수 10자리, 앞을 0으로
-        // (4) %011d : 정수 11자리, 앞을 0으로
-
-
-        function makeRandom(min, max){
-            var RandVal = Math.floor(Math.random()*(max-min+1)) + min;
-            return RandVal;
-        }
-
-        function padLeft(nr, n, str){
-            return Array(n-String(nr).length+1).join(str||'0')+nr;
-        }
-
-        Number.prototype.padLeft = function(n,str){
-            return Array(n-String(this).length+1).join(str||'0')+this;
-        }
-
-
-        console.log('test----------------------------');
-
-
-        var type1 = padLeft(Math.floor(Math.random() * 1000) + 1,14);       //=> (1)
-        var type2 = padLeft(Math.floor(Math.random() * 1000) + 1,10) + '.' + padLeft(makeRandom(0, 9999), 4);    //=> (2)
-        var type3 = padLeft(Math.floor(Math.random() * 1000) + 1,10);       //=> (3)
-        var type4 = padLeft(Math.floor(Math.random() * 1000) + 1,11);       //=> (4)
+        var rnd = Math.random() * 100;
 
         var con = {
             time: ct,
-            battery: type2,
+            battery: rnd,
         };
         
         for (var i = 0; i < upload_arr.length; i++) {
@@ -197,13 +147,12 @@ function tas_watchdog() {
     }
     else if(tas_state == 'init_serial') {
         tas_state = 'connect';
-
     }
     else if(tas_state == 'connect' || tas_state == 'reconnect') {
         upload_client.connect(useparentport, useparenthostname, function() {
             console.log('upload Connected');
             tas_download_count = 0;
-
+            tas_state = 'upload';
         });
     }
 }
