@@ -4,7 +4,7 @@ this is CDP1 team 5's github project
 1. mobius docker
 2. ncube
 3. tas : fake drone
-  *data names*
+data names
     - location : x,y,z
     - position : Pitch, Roll, Yaw
     - task : task
@@ -15,5 +15,5 @@ this is CDP1 team 5's github project
     - flightmode : mode
 4. Android Application
 
-*HOT TO RUN MOBIUS DOCKER
-  read the README.md at https://github.com/IoTKETI/Mobius_Docker
+HOT TO RUN MOBIUS DOCKER
+read the README.md at https://github.com/IoTKETI/Mobius_Docker
