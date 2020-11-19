@@ -1,9 +1,3 @@
-/**
- * Created by ryeubi on 2015-08-31.
- * Updated 2017.03.06
- * Made compatible with Thyme v1.7.2
- */
-
 var net = require('net');
 var util = require('util');
 var fs = require('fs');
@@ -16,18 +10,10 @@ const path = require('path');
 const moment = require('moment');
 require('moment-timezone');
 moment.tz.setDefault("Asia/Seoul");
-
-//var sh_serial = require('./serial');
-
-// var SerialPort = require('serialport');
-
-// var usecomport = '';
-// var usebaudrate = '';
 var useparentport = '';
 var useparenthostname = '';
 
 var upload_arr = [];
-// dataset 만들때 사용, IPE 폴더 내 conf.xml <download>확인하기
 var download_arr = [];
 
 var conf = {};
@@ -51,36 +37,19 @@ fs.readFile('conf.xml', 'utf-8', function (err, data) {
                 //JSON.stringfy(value, replacer, space): value만 필수
                 var jsonString = JSON.stringify(result);
                 conf = JSON.parse(jsonString)['m2m:conf'];
-
-                // usecomport = conf.tas.comport;
-                // usebaudrate = conf.tas.baudrate;
-
-                //conf.xml의 parenthostname 사용하는 부분, thyme.js로 연결하는것
+                
                 useparenthostname = conf.tas.parenthostname;
                 useparentport = conf.tas.parentport;
 
-                //upload는 기존 cnt-co2부분
                 if(conf.upload != null) {
                     if (conf.upload['ctname'] != null) {
-                        //여기로 안 들어옴
                         upload_arr[0] = conf.upload;
-
                     }
                     else {
                         upload_arr = conf.upload;
                         console.log('upload_arr -> conf.upload :' + upload_arr[0]);
                     }
                 }
-
-                //download는 기존 cnt-led부분
-                // if(conf.download != null) {
-                //     if (conf.download['ctname'] != null) {
-                //         download_arr[0] = conf.download;
-                //     }
-                //     else {
-                //         download_arr = conf.download;
-                //     }
-                // }
             }
         });
     }
@@ -95,47 +64,22 @@ var t_count = 0;
 
 setInterval(() => {
     if (tas_state == 'upload') {
-
-        //cin의 content 랜덤값 생성부
-
-        //data 컨테이너 cin content 값 (DAT00, DAT01, ~ ,DAT44)
-        /*        var con = {dat00: Math.random(), dat01: Math.random(), dat02: Math.random(), dat03: Math.random(), dat04: Math.random(), dat44: Math.random()};*/
-
         var now = new Date();
         var second = 1000 * 60;
         var fmt1 = 'YYYYMMDDHHmmss';
-//        var fmt2 = 'YYMMDDhhmmss';
-//        console.log('==== ct : ' + ct);
         var ct = moment(now).format(fmt1); //Date 객체를 파라미터로 넣기
-        //console.log(moment(now.getTime() + second).format(fmt1)); //밀리초를 파라미터로 넣기
         console.log('**TIME: ' + ct);
-
-//        console.log(moment(now.replace(/[.]/g, '')).format(fmt2)); //문자열로된 날짜를 파라미터로 넣기
-
-        /*        console.log('==== fmt1: ' + fmt1+ '==== fmt1 type: ' + typeof fmt1);
-                console.log('==== fmt2: ' + fmt2 + '==== fmt2 type: ' + typeof fmt2);
-                console.log('==== now :' + now + '====now type: ' + typeof now);*/
-
         var hi = (Math.random() * 10) + 1;
         console.log('hi == :' + hi);
-        //var hifmt = '%014d';
-        //var hihi = Math.random(hi).format(hifmt);
-        //console.log('hihi == :' + hihi);
+
 
         var a = '12345';
         var b = 12345;
-        //var w = util.format('%010d', a);  //0 은 왼쪽에 채울 숫자, 6 은 자릿수, 1은 실제 숫자 값
-        //console.log('**** w == : ' + w);
-
-
         var util = require('util');
         var data = util.format('%010d, %s', b, a);
 
-
-
         console.log('****** result : ' +  data);
 
-        //console.log(String.format('%02d', 8));
 
         console.log('test----------------------------');
 
@@ -159,12 +103,6 @@ setInterval(() => {
             return Array(n-String(this).length+1).join(str||'0')+this;
         }
 
-        //console.log((Math.floor(Math.random() * 1000) + 1).padLeft(5));     //=> '00023'
-        //console.log((a).padLeft(5,' ')); //=> '   23'
-        //console.log(padLeft(a,5,'>>'));  //=> '>>>>>>23'
-
-
-
 
         console.log('test----------------------------');
 
@@ -178,7 +116,7 @@ setInterval(() => {
             time: ct,
             battery: type2,
         };
-
+        
         for (var i = 0; i < upload_arr.length; i++) {
 			if (upload_arr[i].id == 'data') {
                 var cin = {ctname: upload_arr[i].ctname, con: con};
@@ -258,47 +196,16 @@ function tas_watchdog() {
         }
     }
     else if(tas_state == 'init_serial') {
-        // SerialPort = serialport.SerialPort;
-        //
-        // serialport.list(function (err, ports) {
-        //     ports.forEach(function (port) {
-        //         console.log(port.comName);
-        //     });
-        // });
-
-        // myPort = new SerialPort(usecomport, {
-        //     baudRate : parseInt(usebaudrate, 10),
-        //     buffersize : 1
-        //     //parser : serialport.parsers.readline("\r\n")
-        // });
-
-        // myPort.on('open', showPortOpen);
-        // myPort.on('data', saveLastestData);
-        // myPort.on('close', showPortClose);
-        // myPort.on('error', showError);
-
-        // if(myPort) {
-        //     console.log('tas init serial ok');
         tas_state = 'connect';
-        // }
+
     }
     else if(tas_state == 'connect' || tas_state == 'reconnect') {
         upload_client.connect(useparentport, useparenthostname, function() {
             console.log('upload Connected');
             tas_download_count = 0;
-            // for (var i = 0; i < download_arr.length; i++) {
-            //     console.log('download Connected - ' + download_arr[i].ctname + ' hello');
-            //     var cin = {ctname: download_arr[i].ctname, con: 'hello'};
-            //     upload_client.write(JSON.stringify(cin) + '<EOF>');
-            // }
 
-            // if (tas_download_count >= download_arr.length) {
-            tas_state = 'upload';
-            // }
         });
     }
 }
 
-//sec 단위는 ms
 wdt.set_wdt(require('shortid').generate(), 3, tas_watchdog);
-// wdt.set_wdt(require('shortid').generate(), 3, serial_upload_action);
