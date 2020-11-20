@@ -108,7 +108,7 @@
         app:layout_constraintVertical_bias="0.683" />
 
     <Button
-        android:id="@+id/button"
+        android:id="@+id/startButton"
         android:layout_width="155dp"
         android:layout_height="59dp"
         android:text="Start"
@@ -120,7 +120,7 @@
         app:layout_constraintVertical_bias="0.95" />
 
     <Button
-        android:id="@+id/button2"
+        android:id="@+id/stopButton"
         android:layout_width="175dp"
         android:layout_height="59dp"
         android:text="Stop"
@@ -132,7 +132,7 @@
         app:layout_constraintVertical_bias="0.948" />
 
     <TextView
-        android:id="@+id/textView11"
+        android:id="@+id/batteryInfo"
         android:layout_width="111dp"
         android:layout_height="42dp"
         android:fontFamily="monospace"
@@ -145,33 +145,7 @@
         app:layout_constraintVertical_bias="0.028" />
 
     <TextView
-        android:id="@+id/textView15"
-        android:layout_width="111dp"
-        android:layout_height="42dp"
-        android:fontFamily="monospace"
-        android:text="Dummy Value 1"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.762"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.373" />
-
-    <TextView
-        android:id="@+id/textView16"
-        android:layout_width="111dp"
-        android:layout_height="42dp"
-        android:fontFamily="monospace"
-        android:text="Dummy Value 2"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.762"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.477" />
-
-    <TextView
-        android:id="@+id/textView19"
+        android:id="@+id/efkInfo"
         android:layout_width="111dp"
         android:layout_height="42dp"
         android:fontFamily="monospace"
@@ -184,7 +158,7 @@
         app:layout_constraintVertical_bias="0.682" />
 
     <TextView
-        android:id="@+id/textView20"
+        android:id="@+id/missionInfo"
         android:layout_width="111dp"
         android:layout_height="42dp"
         android:fontFamily="monospace"
@@ -197,20 +171,7 @@
         app:layout_constraintVertical_bias="0.803" />
 
     <TextView
-        android:id="@+id/textView17"
-        android:layout_width="111dp"
-        android:layout_height="42dp"
-        android:fontFamily="monospace"
-        android:text="Dummy Value 0"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.769"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.271" />
-
-    <TextView
-        android:id="@+id/textView18"
+        android:id="@+id/flightMode"
         android:layout_width="111dp"
         android:layout_height="42dp"
         android:fontFamily="monospace"
@@ -223,7 +184,115 @@
         app:layout_constraintVertical_bias="0.582" />
 
     <TextView
-        android:id="@+id/textView12"
+        android:id="@+id/xVibration"
+        android:layout_width="37dp"
+        android:layout_height="42dp"
+        android:text="X"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.505"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.27" />
+
+    <TextView
+        android:id="@+id/xLocation"
+        android:layout_width="37dp"
+        android:layout_height="42dp"
+        android:text="X"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.505"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.477" />
+
+    <TextView
+        android:id="@+id/pitchControl"
+        android:layout_width="37dp"
+        android:layout_height="42dp"
+        android:text="X"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.505"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.375" />
+
+    <TextView
+        android:id="@+id/yVibration"
+        android:layout_width="37dp"
+        android:layout_height="42dp"
+        android:text="Y"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.727"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.271" />
+
+    <TextView
+        android:id="@+id/yLocation"
+        android:layout_width="37dp"
+        android:layout_height="42dp"
+        android:text="Y"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.727"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.475" />
+
+    <TextView
+        android:id="@+id/zVibration"
+        android:layout_width="37dp"
+        android:layout_height="42dp"
+        android:text="Z"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.955"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.271" />
+
+    <TextView
+        android:id="@+id/zLocation"
+        android:layout_width="37dp"
+        android:layout_height="42dp"
+        android:text="Z"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.955"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.474" />
+
+    <TextView
+        android:id="@+id/yawControl"
+        android:layout_width="37dp"
+        android:layout_height="42dp"
+        android:text="Z"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.955"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.375" />
+
+    <TextView
+        android:id="@+id/rollControl"
+        android:layout_width="37dp"
+        android:layout_height="42dp"
+        android:text="Z"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.727"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.374" />
+
+    <TextView
+        android:id="@+id/pitchPosition"
         android:layout_width="37dp"
         android:layout_height="42dp"
         android:text="X"
@@ -235,7 +304,7 @@
         app:layout_constraintVertical_bias="0.15" />
 
     <TextView
-        android:id="@+id/textView13"
+        android:id="@+id/rollPosition"
         android:layout_width="37dp"
         android:layout_height="42dp"
         android:text="Y"
@@ -247,7 +316,7 @@
         app:layout_constraintVertical_bias="0.149" />
 
     <TextView
-        android:id="@+id/textView14"
+        android:id="@+id/yawPosition"
         android:layout_width="37dp"
         android:layout_height="42dp"
         android:text="Z"
