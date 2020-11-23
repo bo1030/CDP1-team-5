@@ -6,15 +6,7 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.util.Log;
 import android.view.View;
-
-import org.eclipse.paho.android.service.MqttAndroidClient;
-import org.eclipse.paho.client.mqttv3.IMqttActionListener;
-import org.eclipse.paho.client.mqttv3.IMqttDeliveryToken;
-import org.eclipse.paho.client.mqttv3.IMqttToken;
-import org.eclipse.paho.client.mqttv3.MqttCallback;
-import org.eclipse.paho.client.mqttv3.MqttClient;
-import org.eclipse.paho.client.mqttv3.MqttException;
-import org.eclipse.paho.client.mqttv3.MqttMessage;
+import android.os.Handler;
 
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
@@ -23,13 +15,9 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import java.util.Timer;
-import java.util.TimerTask;
-import javax.xml.parsers.*;
-import org.w3c.dom.*;
 
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements Button.OnClickListener{
 
     Button startBtn, stopBtn;
     TextView battery, positionPitch, positionRoll, positionYaw , vibrationX, vibrationY, vibrationZ, controlPitch, controlRoll, controlYaw, locationX, locationY, locationZ, mod, ekfStatus, task;
@@ -41,10 +29,21 @@ public class MainActivity extends AppCompatActivity {
     private String ServiceAEName = "CDP5";
     private String MQTT_Req_Topic = "";
     private String MQTT_Resp_Topic = "";
-    private MqttAndroidClient mqttClient = null;
+    private ParseElementXml par = null;
     private String Mobius_Address ="13.209.165.214";
-    private Timer timer;
-    private TimerTask download;
+    public Handler handler;
+    RetrieveRequest bat;
+    RetrieveRequest con;
+    RetrieveRequest loc;
+    RetrieveRequest tas;
+    RetrieveRequest EKF;
+    RetrieveRequest vib;
+    RetrieveRequest pos;
+    RetrieveRequest mode;
+    public MainActivity() {
+        handler = new Handler();
+        par = new ParseElementXml();
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -122,45 +121,116 @@ public class MainActivity extends AppCompatActivity {
         aeCreate.start();
     }
 
-    private List<String> parsingf(String xml)
-    {
-        List<String> data = new ArrayList<String>();
-        try {
-            DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
-            DocumentBuilder documentbuilder = factory.newDocumentBuilder(); 
-            InputStream is = new ByteArrayInputStream(xml.getBytes());
-            Document doc = documentbuilder.parse(is);
-            Element element = doc.getDocumentElement();
-            NodeList list = element.getElementsByTagName("con");
-            for (int i = 0; i < list.getLength(); i++) {
-                Node node = list.item(i);
-                Node temp = node.getFirstChild();
-                String value = temp.getNodeValue();
-                data.add(value);
-            }
- 
-        } catch (Exception e) {
-            System.out.println("parsing error" + e.getMessage());
-        }
-
-        return data;
-    }
-
     public void onClick(View v) {
         switch (v.getId()){
-            case R.id.startBtn:{
-                RetrieveRequest bat = new RetrieveRequest("battery");
-                RetrieveRequest con = new RetrieveRequest("control");
-                RetrieveRequest loc = new RetrieveRequest("location");
-                RetrieveRequest tas = new RetrieveRequest("task");
-                RetrieveRequest EKF = new RetrieveRequest("EKF");
-                RetrieveRequest vib = new RetrieveRequest("vibration");
-                RetrieveRequest pos = new RetrieveRequest("position");
-                RetrieveRequest mode = new RetrieveRequest("flightmode");
-                
+            case R.id.startButton:{
+                bat = new RetrieveRequest("battery");
+                con = new RetrieveRequest("control");
+                loc = new RetrieveRequest("location");
+                tas = new RetrieveRequest("task");
+                EKF = new RetrieveRequest("EKF");
+                vib = new RetrieveRequest("vibration");
+                pos = new RetrieveRequest("position");
+                mode = new RetrieveRequest("flightmode");
+                bat.setReceiver(new IReceived() {
+                    public void getResponseBody(final String msg) {
+                        handler.post(new Runnable() {
+                            public void run() {
+                                battery.setText(par.GetElementJson(par.GetElementXml(msg,"con"),"battery"));
+                            }
+                        });
+                    }
+                });
+                bat.start();
+
+                con.setReceiver(new IReceived() {
+                    public void getResponseBody(final String msg) {
+                        handler.post(new Runnable() {
+                            public void run() {
+                                controlPitch.setText(par.GetElementJson(par.GetElementXml(msg,"con"),"Pitch"));
+                                controlRoll.setText(par.GetElementJson(par.GetElementXml(msg,"con"),"Roll"));
+                                controlYaw.setText(par.GetElementJson(par.GetElementXml(msg,"con"),"Yaw"));
+                            }
+                        });
+                    }
+                });
+                con.start();
+
+                loc.setReceiver(new IReceived() {
+                    public void getResponseBody(final String msg) {
+                        handler.post(new Runnable() {
+                            public void run() {
+                                locationX.setText(par.GetElementJson(par.GetElementXml(msg,"con"),"x"));
+                                locationY.setText(par.GetElementJson(par.GetElementXml(msg,"con"),"y"));
+                                locationZ.setText(par.GetElementJson(par.GetElementXml(msg,"con"),"z"));
+                            }
+                        });
+                    }
+                });
+                loc.start();
+
+                tas.setReceiver(new IReceived() {
+                    public void getResponseBody(final String msg) {
+                        handler.post(new Runnable() {
+                            public void run() {
+                                task.setText(par.GetElementJson(par.GetElementXml(msg,"con"),"task"));
+                            }
+                        });
+                    }
+                });
+                tas.start();
+
+                EKF.setReceiver(new IReceived() {
+                    public void getResponseBody(final String msg) {
+                        handler.post(new Runnable() {
+                            public void run() {
+                                ekfStatus.setText(par.GetElementJson(par.GetElementXml(msg,"con"),"information"));
+                            }
+                        });
+                    }
+                });
+                EKF.start();
+
+                vib.setReceiver(new IReceived() {
+                    public void getResponseBody(final String msg) {
+                        handler.post(new Runnable() {
+                            public void run() {
+                                vibrationX.setText(par.GetElementJson(par.GetElementXml(msg,"con"),"x_vibration"));
+                                vibrationY.setText(par.GetElementJson(par.GetElementXml(msg,"con"),"y_vibration"));
+                                vibrationZ.setText(par.GetElementJson(par.GetElementXml(msg,"con"),"z_vibration"));
+                            }
+                        });
+                    }
+                });
+                vib.start();
+
+                pos.setReceiver(new IReceived() {
+                    public void getResponseBody(final String msg) {
+                        handler.post(new Runnable() {
+                            public void run() {
+                                positionPitch.setText(par.GetElementJson(par.GetElementXml(msg,"con"),"Pitch"));
+                                positionRoll.setText(par.GetElementJson(par.GetElementXml(msg,"con"),"Roll"));
+                                positionYaw.setText(par.GetElementJson(par.GetElementXml(msg,"con"),"Yaw"));
+                            }
+                        });
+                    }
+                });
+                pos.start();
+
+                mode.setReceiver(new IReceived() {
+                    public void getResponseBody(final String msg) {
+                        handler.post(new Runnable() {
+                            public void run() {
+                                mod.setText(par.GetElementJson(par.GetElementXml(msg,"con"),"mode"));
+                            }
+                        });
+                    }
+                });
+                mode.start();
+
                 break;  
             }
-            case R.id.stopBtn:{
+            case R.id.stopButton:{
                 break;
             }
         }
@@ -329,7 +399,6 @@ public class MainActivity extends AppCompatActivity {
                 conn.connect();
 
                 responseCode = conn.getResponseCode();
-
                 BufferedReader in = null;
                 String aei = "";
                 if (responseCode == 200) {
