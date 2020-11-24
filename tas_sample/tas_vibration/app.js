@@ -65,9 +65,9 @@ setInterval(() => {
 
         var con = {
             time: ct,
-            x_vibraion: rnd,
-            y_vibraion: rnd,
-            z_vibraion: rnd
+            x_vibration: rnd,
+            y_vibration: rnd,
+            z_vibration: rnd
         };
 
 
