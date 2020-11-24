@@ -32,15 +32,7 @@ public class MainActivity extends AppCompatActivity implements Button.OnClickLis
     private ParseElementXml par = null;
     private String Mobius_Address ="13.209.165.214";
     public Handler handler;
-    RetrieveRequest bat;
-    RetrieveRequest con;
-    RetrieveRequest loc;
-    RetrieveRequest tas;
-    RetrieveRequest EKF;
-    RetrieveRequest vib;
-    RetrieveRequest pos;
-    RetrieveRequest mode;
-    private autoreload ar = new autoreload();
+    private autoreload ar;
     public MainActivity() {
         handler = new Handler();
         par = new ParseElementXml();
@@ -124,6 +116,7 @@ public class MainActivity extends AppCompatActivity implements Button.OnClickLis
     public void onClick(View v) {
         switch (v.getId()){
             case R.id.startButton:{
+                ar = new autoreload();
                 ar.start();
                 break;  
             }
@@ -154,14 +147,14 @@ public class MainActivity extends AppCompatActivity implements Button.OnClickLis
             try {
                 while(true)
                 {
-                    bat = new RetrieveRequest("battery");
-                    con = new RetrieveRequest("control");
-                    loc = new RetrieveRequest("location");
-                    tas = new RetrieveRequest("task");
-                    EKF = new RetrieveRequest("EKF");
-                    vib = new RetrieveRequest("vibration");
-                    pos = new RetrieveRequest("position");
-                    mode = new RetrieveRequest("flightmode");
+                    RetrieveRequest bat = new RetrieveRequest("battery");
+                    RetrieveRequest con = new RetrieveRequest("control");
+                    RetrieveRequest loc = new RetrieveRequest("location");
+                    RetrieveRequest tas = new RetrieveRequest("task");
+                    RetrieveRequest EKF = new RetrieveRequest("EKF");
+                    RetrieveRequest vib = new RetrieveRequest("vibration");
+                    RetrieveRequest pos = new RetrieveRequest("position");
+                    RetrieveRequest mode = new RetrieveRequest("flightmode");
                     bat.setReceiver(new IReceived() {
                         public void getResponseBody(final String msg) {
                             handler.post(new Runnable() {
