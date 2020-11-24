@@ -40,6 +40,7 @@ public class MainActivity extends AppCompatActivity implements Button.OnClickLis
     RetrieveRequest vib;
     RetrieveRequest pos;
     RetrieveRequest mode;
+    private autoreload ar = new autoreload();
     public MainActivity() {
         handler = new Handler();
         par = new ParseElementXml();
@@ -77,11 +78,10 @@ public class MainActivity extends AppCompatActivity implements Button.OnClickLis
 
         ekfStatus = (TextView) findViewById(R.id.efkInfo);
         task = (TextView) findViewById(R.id.missionInfo);
+        csebase.setInfo(Mobius_Address,"7579","Mobius","1883");
     }
 
     public void GetAEInfo() {
-        csebase.setInfo(Mobius_Address,"7579","Mobius","1883");
-
         //csebase.setInfo("203.253.128.151","7579","Mobius","1883");
         // AE Create for Android AE
         ae.setAppName("ncubeapp");
@@ -124,113 +124,11 @@ public class MainActivity extends AppCompatActivity implements Button.OnClickLis
     public void onClick(View v) {
         switch (v.getId()){
             case R.id.startButton:{
-                bat = new RetrieveRequest("battery");
-                con = new RetrieveRequest("control");
-                loc = new RetrieveRequest("location");
-                tas = new RetrieveRequest("task");
-                EKF = new RetrieveRequest("EKF");
-                vib = new RetrieveRequest("vibration");
-                pos = new RetrieveRequest("position");
-                mode = new RetrieveRequest("flightmode");
-                bat.setReceiver(new IReceived() {
-                    public void getResponseBody(final String msg) {
-                        handler.post(new Runnable() {
-                            public void run() {
-                                battery.setText(par.GetElementJson(par.GetElementXml(msg,"con"),"battery"));
-                            }
-                        });
-                    }
-                });
-                bat.start();
-
-                con.setReceiver(new IReceived() {
-                    public void getResponseBody(final String msg) {
-                        handler.post(new Runnable() {
-                            public void run() {
-                                controlPitch.setText(par.GetElementJson(par.GetElementXml(msg,"con"),"Pitch"));
-                                controlRoll.setText(par.GetElementJson(par.GetElementXml(msg,"con"),"Roll"));
-                                controlYaw.setText(par.GetElementJson(par.GetElementXml(msg,"con"),"Yaw"));
-                            }
-                        });
-                    }
-                });
-                con.start();
-
-                loc.setReceiver(new IReceived() {
-                    public void getResponseBody(final String msg) {
-                        handler.post(new Runnable() {
-                            public void run() {
-                                locationX.setText(par.GetElementJson(par.GetElementXml(msg,"con"),"x"));
-                                locationY.setText(par.GetElementJson(par.GetElementXml(msg,"con"),"y"));
-                                locationZ.setText(par.GetElementJson(par.GetElementXml(msg,"con"),"z"));
-                            }
-                        });
-                    }
-                });
-                loc.start();
-
-                tas.setReceiver(new IReceived() {
-                    public void getResponseBody(final String msg) {
-                        handler.post(new Runnable() {
-                            public void run() {
-                                task.setText(par.GetElementJson(par.GetElementXml(msg,"con"),"task"));
-                            }
-                        });
-                    }
-                });
-                tas.start();
-
-                EKF.setReceiver(new IReceived() {
-                    public void getResponseBody(final String msg) {
-                        handler.post(new Runnable() {
-                            public void run() {
-                                ekfStatus.setText(par.GetElementJson(par.GetElementXml(msg,"con"),"information"));
-                            }
-                        });
-                    }
-                });
-                EKF.start();
-
-                vib.setReceiver(new IReceived() {
-                    public void getResponseBody(final String msg) {
-                        handler.post(new Runnable() {
-                            public void run() {
-                                vibrationX.setText(par.GetElementJson(par.GetElementXml(msg,"con"),"x_vibration"));
-                                vibrationY.setText(par.GetElementJson(par.GetElementXml(msg,"con"),"y_vibration"));
-                                vibrationZ.setText(par.GetElementJson(par.GetElementXml(msg,"con"),"z_vibration"));
-                            }
-                        });
-                    }
-                });
-                vib.start();
-
-                pos.setReceiver(new IReceived() {
-                    public void getResponseBody(final String msg) {
-                        handler.post(new Runnable() {
-                            public void run() {
-                                positionPitch.setText(par.GetElementJson(par.GetElementXml(msg,"con"),"Pitch"));
-                                positionRoll.setText(par.GetElementJson(par.GetElementXml(msg,"con"),"Roll"));
-                                positionYaw.setText(par.GetElementJson(par.GetElementXml(msg,"con"),"Yaw"));
-                            }
-                        });
-                    }
-                });
-                pos.start();
-
-                mode.setReceiver(new IReceived() {
-                    public void getResponseBody(final String msg) {
-                        handler.post(new Runnable() {
-                            public void run() {
-                                mod.setText(par.GetElementJson(par.GetElementXml(msg,"con"),"mode"));
-                            }
-                        });
-                    }
-                });
-                mode.start();
-
+                ar.start();
                 break;  
             }
             case R.id.stopButton:{
+                ar.interrupt();
                 break;
             }
         }
@@ -249,6 +147,123 @@ public class MainActivity extends AppCompatActivity implements Button.OnClickLis
 
     public interface IReceived {
         void getResponseBody(String msg);
+    }
+
+    class autoreload extends Thread{
+        public void run(){
+            try {
+                while(true)
+                {
+                    bat = new RetrieveRequest("battery");
+                    con = new RetrieveRequest("control");
+                    loc = new RetrieveRequest("location");
+                    tas = new RetrieveRequest("task");
+                    EKF = new RetrieveRequest("EKF");
+                    vib = new RetrieveRequest("vibration");
+                    pos = new RetrieveRequest("position");
+                    mode = new RetrieveRequest("flightmode");
+                    bat.setReceiver(new IReceived() {
+                        public void getResponseBody(final String msg) {
+                            handler.post(new Runnable() {
+                                public void run() {
+                                    battery.setText(String.format("%.1f", Double.parseDouble(par.GetElementXml(msg,"battery"))));
+                                }
+                            });
+                        }
+                    });
+
+                    con.setReceiver(new IReceived() {
+                        public void getResponseBody(final String msg) {
+                            handler.post(new Runnable() {
+                                public void run() {
+                                    controlPitch.setText(String.format("%.1f", Double.parseDouble(par.GetElementXml(msg,"Pitch"))));
+                                    controlRoll.setText(String.format("%.1f", Double.parseDouble(par.GetElementXml(msg,"Roll"))));
+                                    controlYaw.setText(String.format("%.1f", Double.parseDouble(par.GetElementXml(msg,"Yaw"))));
+                                }
+                            });
+                        }
+                    });
+
+                    loc.setReceiver(new IReceived() {
+                        public void getResponseBody(final String msg) {
+                            handler.post(new Runnable() {
+                                public void run() {
+                                    locationX.setText(String.format("%.1f", Double.parseDouble(par.GetElementXml(msg,"x"))));
+                                    locationY.setText(String.format("%.1f", Double.parseDouble(par.GetElementXml(msg,"y"))));
+                                    locationZ.setText(String.format("%.1f", Double.parseDouble(par.GetElementXml(msg,"z"))));
+                                }
+                            });
+                        }
+                    });
+
+                    tas.setReceiver(new IReceived() {
+                        public void getResponseBody(final String msg) {
+                            handler.post(new Runnable() {
+                                public void run() {
+                                    task.setText(par.GetElementXml(msg,"task"));
+                                }
+                            });
+                        }
+                    });
+
+                    EKF.setReceiver(new IReceived() {
+                        public void getResponseBody(final String msg) {
+                            handler.post(new Runnable() {
+                                public void run() {
+                                    ekfStatus.setText(String.format("%.1f", Double.parseDouble(par.GetElementXml(msg,"information"))));
+                                }
+                            });
+                        }
+                    });
+
+                    vib.setReceiver(new IReceived() {
+                        public void getResponseBody(final String msg) {
+                            handler.post(new Runnable() {
+                                public void run() {
+                                    vibrationX.setText(String.format("%.1f", Double.parseDouble(par.GetElementXml(msg,"x_vibration"))));
+                                    vibrationY.setText(String.format("%.1f", Double.parseDouble(par.GetElementXml(msg,"y_vibration"))));
+                                    vibrationZ.setText(String.format("%.1f", Double.parseDouble(par.GetElementXml(msg,"z_vibration"))));
+                                }
+                            });
+                        }
+                    });
+
+                    pos.setReceiver(new IReceived() {
+                        public void getResponseBody(final String msg) {
+                            handler.post(new Runnable() {
+                                public void run() {
+                                    positionPitch.setText(String.format("%.1f", Double.parseDouble(par.GetElementXml(msg,"Pitch"))));
+                                    positionRoll.setText(String.format("%.1f", Double.parseDouble(par.GetElementXml(msg,"Roll"))));
+                                    positionYaw.setText(String.format("%.1f", Double.parseDouble(par.GetElementXml(msg,"Yaw"))));
+                                }
+                            });
+                        }
+                    });
+
+                    mode.setReceiver(new IReceived() {
+                        public void getResponseBody(final String msg) {
+                            handler.post(new Runnable() {
+                                public void run() {
+                                    mod.setText(par.GetElementXml(msg,"mode"));
+                                }
+                            });
+                        }
+                    });
+
+                    bat.start();
+                    con.start();
+                    loc.start();
+                    tas.start();
+                    EKF.start();
+                    vib.start();
+                    pos.start();
+                    mode.start();
+                    Thread.sleep(500);
+                }
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
     }
 
     class RetrieveRequest extends Thread {
@@ -276,7 +291,7 @@ public class MainActivity extends AppCompatActivity implements Button.OnClickLis
 
                 conn.setRequestProperty("Accept", "application/xml");
                 conn.setRequestProperty("X-M2M-RI", "12345");
-                conn.setRequestProperty("X-M2M-Origin", ae.getAEid() );
+                conn.setRequestProperty("X-M2M-Origin", "SCDP5" );
                 conn.setRequestProperty("nmtype", "long");
                 conn.connect();
 
