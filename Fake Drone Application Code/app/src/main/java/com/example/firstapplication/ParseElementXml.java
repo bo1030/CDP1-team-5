@@ -12,9 +12,6 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 
 
-/**
- * Created by araha on 2016-09-20.
- */
 public class ParseElementXml {
     private String getstr="";
 

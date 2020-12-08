@@ -1,8 +1,5 @@
 package com.example.firstapplication;
 
-/**
- * Created by araha on 2016-09-20.
- */
 public class CSEBase {
     public String CSEHostAddress = "";
     public String CSEPort = "";
